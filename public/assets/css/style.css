@@ -81,7 +81,7 @@ body {
 
 .auth-form {
 	display: grid;
-	gap: 12px;
+	gap: 10px;
 }
 
 .auth-field {
@@ -132,8 +132,9 @@ body {
 
 .auth-input-wrap .auth-icon {
 	position: absolute;
-	top: 4px;
-	right: 4px;
+	top: 50%;
+	right: 6px;
+	transform: translateY(-50%);
 	width: 32px;
 	height: 32px;
 	display: grid;
@@ -151,7 +152,7 @@ body {
 	cursor: pointer;
 	pointer-events: auto;
 	appearance: none;
--webkit-appearance: none;
+	-webkit-appearance: none;
 }
 
 .auth-icon-button:hover {
@@ -171,7 +172,27 @@ body {
 	max-width: 16px;
 	max-height: 16px;
 	display: block;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 	flex: none;
+}
+
+.auth-icon-svg[hidden] {
+	display: none !important;
+}
+
+.auth-icon-button .auth-icon-svg-eye-off {
+	display: none;
+}
+
+.auth-icon-button[aria-pressed='true'] .auth-icon-svg-eye {
+	display: none;
+}
+
+.auth-icon-button[aria-pressed='true'] .auth-icon-svg-eye-off {
+	display: block;
 }
 
 .section-title {
@@ -355,6 +376,7 @@ textarea:focus {
 	display: flex;
 	gap: 10px;
 	flex-wrap: wrap;
+	margin: 2px 0 0;
 }
 
 .auth-actions .btn {

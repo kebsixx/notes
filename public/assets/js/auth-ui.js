@@ -13,13 +13,6 @@
       input.type = show ? 'text' : 'password';
       button.setAttribute('aria-pressed', show ? 'true' : 'false');
       button.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
-
-      var eye = button.querySelector('.auth-icon-svg-eye');
-      var eyeOff = button.querySelector('.auth-icon-svg-eye-off');
-      if (eye && eyeOff) {
-        eye.hidden = show;
-        eyeOff.hidden = !show;
-      }
     });
   });
 })();

@@ -36,14 +36,7 @@ class AuthController
 
             $errorMessage = 'Login gagal. Periksa username atau password.';
         } catch (PDOException $e) {
-            // Fallback sementara ketika role DB belum punya akses tabel users.
-            if ($loginUsername === 'admin' && $loginPassword === 'admin123') {
-                $_SESSION['user_id'] = 1;
-                $_SESSION['username'] = 'admin';
-                header('Location: index.php');
-                exit;
-            }
-
+            error_log('Login database error: ' . $e->getMessage());
             $errorMessage = 'Gagal memproses login.';
         }
     }
@@ -65,8 +58,8 @@ class AuthController
         global $errorMessage, $successMessage, $signupUsername;
 
         $signupUsername = trim((string) ($_POST['signup_username'] ?? ''));
-        $signupPassword = (string) ($_POST['signup_password'] ?? ''));
-        $signupConfirm = (string) ($_POST['signup_confirm'] ?? ''));
+        $signupPassword = (string) ($_POST['signup_password'] ?? '');
+        $signupConfirm = (string) ($_POST['signup_confirm'] ?? '');
 
         if ($signupUsername === '' || $signupPassword === '' || $signupConfirm === '') {
             $errorMessage = 'Semua field wajib diisi.';
