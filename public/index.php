@@ -6,8 +6,8 @@ require_once __DIR__ . '/../app/Controllers/NoteController.php';
 
 session_start();
 
-$controller = new NoteController($db_conn);
-$authController = new AuthController($db_conn);
+$controller = new \NoteController($db_conn);
+$authController = new \AuthController($db_conn);
 
 $currentUserId = $_SESSION['user_id'] ?? 0;
 $currentUsername = $_SESSION['username'] ?? '';
@@ -16,7 +16,9 @@ $successMessage = '';
 $loginUsernameValue = '';
 $notes = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+if ($requestMethod === 'POST') {
     if (isset($_POST['login_username'], $_POST['login_password'])) {
         $authController->login();
     } elseif (isset($_POST['logout'])) {

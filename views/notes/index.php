@@ -9,10 +9,14 @@
 </head>
 
 <body>
+    <?php
+    $currentUserId = isset($currentUserId) ? (int) $currentUserId : 0;
+    $notes = isset($notes) && is_array($notes) ? $notes : [];
+    ?>
     <main class="wrap">
         <header class="hero">
             <h1>QuickNotes &#x1F4DD;</h1>
-            <p>Setiap user hanya melihat notes miliknya sendiri.</p>
+            <p>Tulis dan Simpan catatan Anda di sini.</p>
         </header>
 
         <?php include __DIR__ . '/../layout/alert.php'; ?>

@@ -5,7 +5,7 @@ require_once __DIR__ . '/../app/Controllers/AuthController.php';
 
 session_start();
 
-$authController = new AuthController($db_conn);
+$authController = new \AuthController($db_conn);
 
 $errorMessage = '';
 $successMessage = '';
@@ -16,7 +16,9 @@ if (isset($_SESSION['user_id']) && (int) $_SESSION['user_id'] > 0) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+$requestMethod = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+if ($requestMethod === 'POST') {
     $authController->signup();
 }
 
