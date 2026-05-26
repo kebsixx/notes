@@ -2,9 +2,9 @@
 
 class AuthController
 {
-    private $db_conn;
+    private PDO $db_conn;
 
-    public function __construct($db_conn)
+    public function __construct(PDO $db_conn)
     {
         $this->db_conn = $db_conn;
     }
