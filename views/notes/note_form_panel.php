@@ -10,6 +10,8 @@ $currentPage = max(1, (int) ($currentPage ?? 1));
         <?php if ($editNoteId > 0): ?>
             <input type="hidden" name="update_id" value="<?php echo (int) $editNoteId; ?>">
         <?php endif; ?>
+        <input type="hidden" name="redirect_q" value="<?php echo htmlspecialchars($searchQuery, ENT_QUOTES, 'UTF-8'); ?>">
+        <input type="hidden" name="redirect_page" value="<?php echo (int) $currentPage; ?>">
         <label for="content">Write a note</label>
         <textarea
             id="content"

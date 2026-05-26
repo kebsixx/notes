@@ -113,7 +113,23 @@ class NoteController
                 ':content' => $content,
                 ':user_id' => $userId,
             ]);
-            header('Location: index.php');
+
+            $redirectParams = [];
+            $postedQ = (string) ($_POST['redirect_q'] ?? '');
+            $postedPage = (int) ($_POST['redirect_page'] ?? 0);
+            if ($postedQ !== '') {
+                $redirectParams['q'] = $postedQ;
+            }
+            if ($postedPage > 1) {
+                $redirectParams['page'] = $postedPage;
+            }
+
+            $location = 'index.php';
+            if (!empty($redirectParams)) {
+                $location .= '?' . http_build_query($redirectParams);
+            }
+
+            header('Location: ' . $location);
             exit;
         } catch (PDOException $e) {
             $errorMessage = 'Gagal menyimpan note.';
@@ -141,7 +157,23 @@ class NoteController
                 ':id' => $deleteId,
                 ':user_id' => $userId,
             ]);
-            header('Location: index.php');
+
+            $redirectParams = [];
+            $postedQ = (string) ($_POST['redirect_q'] ?? '');
+            $postedPage = (int) ($_POST['redirect_page'] ?? 0);
+            if ($postedQ !== '') {
+                $redirectParams['q'] = $postedQ;
+            }
+            if ($postedPage > 1) {
+                $redirectParams['page'] = $postedPage;
+            }
+
+            $location = 'index.php';
+            if (!empty($redirectParams)) {
+                $location .= '?' . http_build_query($redirectParams);
+            }
+
+            header('Location: ' . $location);
             exit;
         } catch (PDOException $e) {
             $errorMessage = 'Gagal menghapus note.';
@@ -178,7 +210,22 @@ class NoteController
                 ':user_id' => $userId,
             ]);
 
-            header('Location: index.php');
+            $redirectParams = [];
+            $postedQ = (string) ($_POST['redirect_q'] ?? '');
+            $postedPage = (int) ($_POST['redirect_page'] ?? 0);
+            if ($postedQ !== '') {
+                $redirectParams['q'] = $postedQ;
+            }
+            if ($postedPage > 1) {
+                $redirectParams['page'] = $postedPage;
+            }
+
+            $location = 'index.php';
+            if (!empty($redirectParams)) {
+                $location .= '?' . http_build_query($redirectParams);
+            }
+
+            header('Location: ' . $location);
             exit;
         } catch (PDOException $e) {
             $errorMessage = 'Gagal memperbarui note.';

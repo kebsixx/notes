@@ -20,6 +20,8 @@ $editQuery = http_build_query([
             <form method="post" action="index.php">
                 <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars((string) ($csrfToken ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                 <input type="hidden" name="delete_id" value="<?php echo $noteId; ?>">
+                <input type="hidden" name="redirect_q" value="<?php echo htmlspecialchars($searchQuery, ENT_QUOTES, 'UTF-8'); ?>">
+                <input type="hidden" name="redirect_page" value="<?php echo (int) $currentPage; ?>">
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </div>
