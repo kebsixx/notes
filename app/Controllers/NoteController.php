@@ -100,7 +100,12 @@ class NoteController
             return;
         }
 
-        $content = trim((string) ($_POST['content'] ?? ''));
+        $rawContent = (string) ($_POST['content'] ?? '');
+        $content = trim($rawContent);
+
+        // sanitize: remove HTML tags and normalize whitespace
+        $content = strip_tags($content);
+        $content = preg_replace('/\s+/', ' ', $content);
 
         if ($content === '') {
             $errorMessage = 'Isi note tidak boleh kosong.';
@@ -113,6 +118,9 @@ class NoteController
                 ':content' => $content,
                 ':user_id' => $userId,
             ]);
+
+            // flash success
+            $_SESSION['flash_success'] = 'Note berhasil disimpan.';
 
             $redirectParams = [];
             $postedQ = (string) ($_POST['redirect_q'] ?? '');
@@ -133,6 +141,8 @@ class NoteController
             exit;
         } catch (PDOException $e) {
             $errorMessage = 'Gagal menyimpan note.';
+            error_log(sprintf('[notes] addNote failed for user_id=%d: %s', $userId, $e->getMessage()));
+            $_SESSION['flash_error'] = $errorMessage;
         }
     }
 
@@ -158,6 +168,8 @@ class NoteController
                 ':user_id' => $userId,
             ]);
 
+            $_SESSION['flash_success'] = 'Note berhasil dihapus.';
+
             $redirectParams = [];
             $postedQ = (string) ($_POST['redirect_q'] ?? '');
             $postedPage = (int) ($_POST['redirect_page'] ?? 0);
@@ -177,6 +189,8 @@ class NoteController
             exit;
         } catch (PDOException $e) {
             $errorMessage = 'Gagal menghapus note.';
+            error_log(sprintf('[notes] deleteNote failed for user_id=%d id=%d: %s', $userId, $deleteId, $e->getMessage()));
+            $_SESSION['flash_error'] = $errorMessage;
         }
     }
 
@@ -210,6 +224,8 @@ class NoteController
                 ':user_id' => $userId,
             ]);
 
+            $_SESSION['flash_success'] = 'Note berhasil diperbarui.';
+
             $redirectParams = [];
             $postedQ = (string) ($_POST['redirect_q'] ?? '');
             $postedPage = (int) ($_POST['redirect_page'] ?? 0);
@@ -229,6 +245,8 @@ class NoteController
             exit;
         } catch (PDOException $e) {
             $errorMessage = 'Gagal memperbarui note.';
+            error_log(sprintf('[notes] updateNote failed for user_id=%d id=%d: %s', $userId, $updateId, $e->getMessage()));
+            $_SESSION['flash_error'] = $errorMessage;
         }
     }
 

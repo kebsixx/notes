@@ -37,6 +37,8 @@ class AuthController
                 $_SESSION['user_id'] = (int) $userRow['id'];
                 $_SESSION['username'] = (string) $userRow['username'];
                 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+                // optional flash
+                $_SESSION['flash_success'] = 'Login berhasil.';
                 header('Location: index.php');
                 exit;
             }
@@ -105,7 +107,10 @@ class AuthController
                 ]);
 
                 $successMessage = 'Signup berhasil. Silakan login.';
+                $_SESSION['flash_success'] = $successMessage;
                 $signupUsername = '';
+                header('Location: ../public/signup.php');
+                exit;
             } catch (PDOException $e) {
                 $sqlState = $e->getCode();
                 if ($sqlState === '23505') {
@@ -113,6 +118,8 @@ class AuthController
                 } else {
                     $errorMessage = 'Signup gagal. Cek permission tabel users di PostgreSQL.';
                 }
+                error_log(sprintf('[auth] signup failed for username=%s: %s', $signupUsername, $e->getMessage()));
+                $_SESSION['flash_error'] = $errorMessage;
             }
         }
     }
