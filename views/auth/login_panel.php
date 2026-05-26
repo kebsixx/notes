@@ -1,6 +1,7 @@
 <section class="panel auth-panel">
     <h2 class="section-title">Login</h2>
     <form method="post" action="index.php" class="auth-form">
+        <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars((string) ($csrfToken ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
         <div class="auth-field">
             <label class="auth-label" for="login_username"><span>Username</span></label>
             <div class="auth-input-wrap">

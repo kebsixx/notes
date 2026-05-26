@@ -13,6 +13,11 @@ class AuthController
     {
         global $errorMessage, $currentUserId, $currentUsername, $loginUsernameValue;
 
+        if (!$this->isValidCsrfToken()) {
+            $errorMessage = 'Token keamanan tidak valid. Muat ulang halaman lalu coba lagi.';
+            return;
+        }
+
         $loginUsername = trim((string) ($_POST['login_username'] ?? ''));
         $loginPassword = (string) ($_POST['login_password'] ?? '');
         $loginUsernameValue = $loginUsername;
@@ -28,8 +33,10 @@ class AuthController
             $userRow = $loginStmt->fetch(PDO::FETCH_ASSOC);
 
             if ($userRow && password_verify($loginPassword, $userRow['password_hash'])) {
+                session_regenerate_id(true);
                 $_SESSION['user_id'] = (int) $userRow['id'];
                 $_SESSION['username'] = (string) $userRow['username'];
+                $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
                 header('Location: index.php');
                 exit;
             }
@@ -43,10 +50,22 @@ class AuthController
 
     public function logout()
     {
+        if (!$this->isValidCsrfToken()) {
+            header('Location: index.php');
+            exit;
+        }
+
         $_SESSION = [];
         if (ini_get('session.use_cookies')) {
             $params = session_get_cookie_params();
-            setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+            setcookie(session_name(), '', [
+                'expires' => time() - 42000,
+                'path' => $params['path'],
+                'domain' => $params['domain'],
+                'secure' => $params['secure'],
+                'httponly' => $params['httponly'],
+                'samesite' => $params['samesite'] ?? 'Lax',
+            ]);
         }
         session_destroy();
         header('Location: index.php');
@@ -56,6 +75,11 @@ class AuthController
     public function signup()
     {
         global $errorMessage, $successMessage, $signupUsername;
+
+        if (!$this->isValidCsrfToken()) {
+            $errorMessage = 'Token keamanan tidak valid. Muat ulang halaman lalu coba lagi.';
+            return;
+        }
 
         $signupUsername = trim((string) ($_POST['signup_username'] ?? ''));
         $signupPassword = (string) ($_POST['signup_password'] ?? '');
@@ -91,5 +115,13 @@ class AuthController
                 }
             }
         }
+    }
+
+    private function isValidCsrfToken(): bool
+    {
+        $sessionToken = (string) ($_SESSION['csrf_token'] ?? '');
+        $postedToken = (string) ($_POST['csrf_token'] ?? '');
+
+        return $sessionToken !== '' && $postedToken !== '' && hash_equals($sessionToken, $postedToken);
     }
 }
